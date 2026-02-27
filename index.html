@@ -1,115 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Govee Controls</title>
-    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+    <title>Govee Controller</title>
     <style>
-        /* Pure black background for Dark Mode */
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: #000000; 
-            padding: 20px; 
-            margin: 0; 
-            color: #ffffff; 
-            display: flex;
-            justify-content: center;
-        }
-
-        /* Sleek dark grey card to hold the controls */
-        .card { 
-            background: #1c1c1e; 
-            border: 1px solid #333333; 
-            border-radius: 20px; 
-            padding: 30px; 
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-        }
-
-        .card-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 30px; 
-        }
-
-        h3 { margin: 0; font-size: 1.8rem; font-weight: 600; letter-spacing: 0.5px;}
-
-        /* BIGGER Toggle Switch for Touchscreens */
-        .switch { position: relative; display: inline-block; width: 80px; height: 44px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #3a3a3c; transition: .4s; border-radius: 44px; }
-        .slider:before { position: absolute; content: ""; height: 36px; width: 36px; left: 4px; bottom: 4px; background-color: #ffffff; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        input:checked + .slider { background-color: #32d74b; } /* Apple-style bright green */
-        input:checked + .slider:before { transform: translateX(36px); }
-
-        .controls-section { margin-bottom: 30px; text-align: center; }
-        .section-title { font-size: 1rem; color: #8e8e93; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: block; font-weight: 600; text-align: left; }
-
-        /* Centers the new color wheel */
-        #colorPicker {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-
-        /* Dark Mode Brightness Slider */
-        .brightness-slider { -webkit-appearance: none; width: 100%; height: 12px; border-radius: 6px; background: #3a3a3c; outline: none; opacity: 0.9; transition: opacity .2s; margin-top: 10px; }
-        .brightness-slider:hover { opacity: 1; }
-        .brightness-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 32px; height: 32px; border-radius: 50%; background: #ffffff; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+        body { background: #000; color: white; text-align: center; font-family: sans-serif; }
+        .container { padding: 20px; }
+        /* Add your color wheel CSS here */
     </style>
 </head>
 <body>
-
-    <div class="card">
-        <div class="card-header">
-            <h3>Desk Light</h3>
-            <label class="switch">
-                <input type="checkbox" onchange="toggleLight(this, '18:C4:35:33:30:36:94:FF', 'H61C5')" checked>
-                <span class="slider"></span>
-            </label>
+    <div class="container">
+        <h1>Desk & Shelf Lights</h1>
         </div>
-
-        <div class="controls-section">
-            <span class="section-title">Color</span>
-            <div id="colorPicker"></div>
-        </div>
-
-        <div class="controls-section" style="margin-bottom: 0;">
-            <span class="section-title">Brightness</span>
-            <input type="range" min="1" max="100" value="100" class="brightness-slider" onchange="setBrightness('18:C4:35:33:30:36:94:FF', 'H61C5', this.value)">
-        </div>
-    </div>
-
-    <script>
-        // Core API function
-        async function sendCmd(mac, model, cmdName, cmdValue) {
-            try { await fetch('/api/control', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mac: mac, model: model, command: cmdName, value: cmdValue }) }); } 
-            catch (error) { console.error("Command failed", error); }
-        }
-
-        function toggleLight(checkbox, mac, model) { sendCmd(mac, model, 'turn', checkbox.checked ? 'on' : 'off'); }
-        function setColor(mac, model, r, g, b) { sendCmd(mac, model, 'color', { r: r, g: g, b: b }); }
-        function setBrightness(mac, model, value) { sendCmd(mac, model, 'brightness', parseInt(value)); }
-
-        // Initialize the beautiful Color Wheel
-        var colorPicker = new iro.ColorPicker("#colorPicker", {
-            width: 260, // Size of the wheel
-            color: "#007AFF", // Starting color
-            layout: [
-                { 
-                    component: iro.ui.Wheel, // We only want the circular wheel part
-                }
-            ]
-        });
-
-        // This listens for when you drag the color wheel and let go
-        // We use 'input:end' so it doesn't spam Govee's servers with 100 commands a second while you are dragging!
-        colorPicker.on('input:end', function(color) {
-            setColor('18:C4:35:33:30:36:94:FF', 'H61C5', color.rgb.r, color.rgb.g, color.rgb.b);
-        });
-    </script>
 </body>
 </html>
