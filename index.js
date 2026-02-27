@@ -3,24 +3,23 @@ const axios = require('axios');
 const path = require('path');
 const app = express();
 
-// Render uses a dynamic port, this line is required
 const PORT = process.env.PORT || 3000;
-
-// Use the API Key you added in Render's Environment Variables
 const GOVEE_API_KEY = process.env.GOVEE_API_KEY;
 
 app.use(express.json());
 
-// Serve the dashboard interface
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// The command center for your lights
 app.post('/control', async (req, res) => {
     try {
-        const { device, model, cmd } = req.body;
-        const response = await axios.put('https://developer-api.govee.com/v1/devices/control', {
+        const { cmd } = req.body;
+        // Desk Light ID Only
+        const device = "9C:80:C1:5E:2F:88:42:F7:A0:78:26:A8:F1:0E:23:95";
+        const model = "H6061";
+
+        await axios.put('https://developer-api.govee.com/v1/devices/control', {
             device: device,
             model: model,
             cmd: cmd
@@ -30,13 +29,12 @@ app.post('/control', async (req, res) => {
                 'Content-Type': 'application/json'
             }
         });
-        res.json({ success: true, data: response.data });
+        res.json({ success: true });
     } catch (error) {
-        console.error('Govee Error:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: "Failed to control lights" });
+        res.status(500).json({ error: "Govee Sync Error" });
     }
 });
 
 app.listen(PORT, () => {
-    console.log(`Govee Controller Live on Port ${PORT}`);
+    console.log(`Desk Controller active on port ${PORT}`);
 });
