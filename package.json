@@ -1,16 +1,13 @@
 {
-  "name": "nodejs",
+  "name": "govee-controller",
   "version": "1.0.0",
-  "description": "",
+  "description": "Govee Light Controller for Dashboard",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/node": "^22.13.11",
-    "express": "^5.2.1"
+    "express": "^4.18.2",
+    "axios": "^1.6.0"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
