@@ -15,9 +15,9 @@ app.get('/', (req, res) => {
 app.post('/control', async (req, res) => {
     try {
         const { cmd } = req.body;
-        // Desk Light ID Only
-        const device = "9C:80:C1:5E:2F:88:42:F7:A0:78:26:A8:F1:0E:23:95";
-        const model = "H6061";
+        // YOUR ACTUAL DESK LIGHT DATA
+        const device = "18:C4:35:33:30:36:94:FF"; 
+        const model = "H61C5";
 
         await axios.put('https://developer-api.govee.com/v1/devices/control', {
             device: device,
@@ -31,6 +31,7 @@ app.post('/control', async (req, res) => {
         });
         res.json({ success: true });
     } catch (error) {
+        console.error("Govee Error:", error.response ? error.response.data : error.message);
         res.status(500).json({ error: "Govee Sync Error" });
     }
 });
